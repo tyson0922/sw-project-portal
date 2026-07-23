@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: sw-project-portal
+
+  datasource:
+    url: jdbc:mariadb://localhost:3306/sw_project_portal
+    username: ${MARIADB_USERNAME}
+    password: ${MARIADB_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MariaDBDialect
+        cache:
+          use_second_level_cache: true
+          region:
+            factory_class: org.hibernate.cache.jcache.internal.JCacheRegionFactory
+        javax:
+          cache:
+            uri: classpath:ehcache.xml
+        generate_statistics: true
+#        naming:
+#          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      jakarta:
+        persistence:
+          sharedCache:
+            mode: ENABLE_SELECTIVE
+
+  thymeleaf:
+    cache: false
+#    check-template-location: true
+#    prefix: classpath:/templates/
+#    suffix: .html
+
+server:
+  port: 8080
+
+app:
+  admin:
+    seed-username: ${ADMIN_SEED_USERNAME:admin}
+    seed-password: ${ADMIN_SEED_PASSWORD:changeMe123!}

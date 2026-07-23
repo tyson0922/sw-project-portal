@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns='http://www.ehcache.org/v3'>
+    <cache alias="kopo.swprojectportal.entity.Technology">
+        <expiry>
+            <ttl unit="seconds">1200</ttl>
+        </expiry>
+        <resources>
+            <heap unit="entries">10000</heap>
+        </resources>
+    </cache>
+</config>
+
