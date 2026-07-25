@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>SW 작품전</title>
@@ -8,9 +10,12 @@
 </head>
 <body>
 
-<nav class="navbar navbar-dark bg-dark px-3 mb-4">
+<nav class="navbar navbar-dark bg-dark px-3 mb-4 d-flex justify-content-between">
     <span class="navbar-brand mb-0 h1">SW 작품전</span>
+    <a sec:authorize="isAuthenticated()" th:href="@{/admin/dashboard}" class="btn btn-outline-light btn-sm">관리자 대시보드</a>
+    <a sec:authorize="isAnonymous()" th:href="@{/admin/login}" class="btn btn-outline-light btn-sm">관리자 로그인</a>
 </nav>
+
 
 <div class="container">
 
@@ -28,10 +33,10 @@
                 <label class="form-label">학생 이름</label>
                 <input type="text" name="studentName" class="form-control" th:value="${selectedStudentName}" placeholder="이름 검색">
             </div>
-            <div class="col-auto form-check mb-2">
-                <input type="checkbox" name="usesAi" value="true" class="form-check-input" th:checked="${selectedUsesAi}">
-                <label class="form-check-label">AI 사용 프로젝트만</label>
-            </div>
+<!--            <div class="col-auto form-check mb-2">-->
+<!--                <input type="checkbox" name="usesAi" value="true" class="form-check-input" th:checked="${selectedUsesAi}">-->
+<!--                <label class="form-check-label">AI 사용 프로젝트만</label>-->
+<!--            </div>-->
             <div class="col-auto">
                 <button type="submit" class="btn btn-dark">검색</button>
             </div>

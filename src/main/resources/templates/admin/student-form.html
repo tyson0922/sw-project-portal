@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>학생 등록</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container py-4">
+    <h3 th:text="${student != null} ? '학생 수정' : '새 학생 등록'">학생 등록</h3>
+
+    <form th:action="@{${formAction}}" method="post">
+        <div class="mb-3">
+            <label class="form-label">이름</label>
+            <input type="text" name="name" class="form-control"
+                   th:value="${student != null} ? ${student.name} : ''" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">기수</label>
+            <input type="text" name="cohort" class="form-control"
+                   th:value="${student != null} ? ${student.cohort} : ''" placeholder="예: 빅데이터과 10기" required>
+        </div>
+        <button type="submit" class="btn btn-dark">저장</button>
+    </form>
+</div>
+
+</body>
+</html>

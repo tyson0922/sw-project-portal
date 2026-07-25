@@ -1,21 +1,16 @@
 package kopo.swprojectportal.dto;
 
 import java.util.List;
-import java.util.Map;
 
-public record ProjectDetailDto(
+public record ProjectFormRequestDto(
         Long id,
         String title,
         String description,
-        String youtubeEmbedUrl,
+        String youtubeUrl,
         String githubUrl,
         String devlogUrl,
         String liveUrl,
         Integer year,
-        List<String> studentNames,
         List<Long> studentIds,
-        Map<String, List<String>> technologiesByCategory,
-        List<TechnologyOptionDto> technologies,
-        boolean usesAi
-) {
-}
+        List<Long> technologyIds
+) {}
