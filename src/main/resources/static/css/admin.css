@@ -1,0 +1,98 @@
+.admin-page,
+.admin-auth-page { min-height: 100vh; background: #f5f8fb; }
+.admin-main { min-height: calc(100vh - 74px); }
+.admin-shell { padding-block: 62px 100px; }
+
+.admin-topbar { height: 74px; border-bottom: 1px solid var(--orbit-border); background: rgba(255,255,255,.94); backdrop-filter: blur(16px); }
+.admin-topbar-inner { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.admin-topbar-actions { display: flex; align-items: center; gap: 18px; }
+.admin-topbar-actions > a,
+.admin-dashboard-link { color: #64748b; font-size: 11px; font-weight: 850; }
+.admin-topbar-actions > a:hover,
+.admin-dashboard-link:hover { color: var(--orbit-accent-dark); }
+.admin-topbar-actions form { margin: 0; }
+.admin-logout-button { min-height: 38px; padding: 0 14px; border: 1px solid var(--orbit-border); border-radius: 9px; background: white; color: var(--orbit-heading); cursor: pointer; font-size: 11px; font-weight: 850; }
+.admin-logout-button:hover { border-color: var(--orbit-accent); color: var(--orbit-accent-dark); }
+
+.admin-page-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; margin-bottom: 44px; }
+.admin-page-heading h1 { margin: 13px 0 0; color: var(--orbit-heading); font-size: clamp(3rem, 6vw, 5.5rem); line-height: .95; letter-spacing: -.075em; }
+.admin-page-heading > p { max-width: 430px; margin: 0 0 3px; color: #718096; font-size: 13px; line-height: 1.8; }
+.admin-page-heading > p strong { color: var(--orbit-heading); }
+.admin-list-heading { align-items: center; }
+.admin-list-heading .button { min-width: 185px; }
+
+.admin-dashboard-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+.admin-feature-card { min-height: 390px; display: flex; flex-direction: column; align-items: flex-start; padding: 38px; overflow: hidden; position: relative; border: 1px solid var(--orbit-border); border-radius: 22px; background: white; box-shadow: var(--shadow-sm); }
+.admin-feature-card::after { content: ""; position: absolute; right: -65px; top: -65px; width: 200px; height: 200px; border: 1px solid #d9edf6; border-radius: 50%; }
+.admin-card-index { position: relative; z-index: 1; margin-left: auto; color: #d3dee9; font-size: 50px; font-weight: 900; line-height: 1; }
+.admin-feature-card h2 { margin: 12px 0 16px; color: var(--orbit-heading); font-size: 31px; letter-spacing: -.045em; }
+.admin-feature-card p { max-width: 420px; margin: 0; color: #718096; font-size: 13px; line-height: 1.8; }
+.admin-feature-card .button { margin-top: auto; }
+
+.admin-table-card { overflow: hidden; border: 1px solid var(--orbit-border); border-radius: 20px; background: white; box-shadow: var(--shadow-sm); }
+.admin-table-header { min-height: 67px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 26px; border-bottom: 1px solid var(--orbit-border); }
+.admin-table-header strong { color: var(--orbit-heading); font-size: 14px; }
+.admin-table-header > span { color: #94a3b8; font-size: 9px; font-weight: 900; letter-spacing: .12em; }
+.admin-table { min-width: 760px; margin: 0; }
+.admin-table > :not(caption) > * > * { padding: 19px 24px; border-bottom-color: #edf1f5; color: #64748b; font-size: 11px; }
+.admin-table thead th { padding-block: 14px; background: #f8fafc; color: #94a3b8; font-size: 9px; font-weight: 900; letter-spacing: .09em; text-transform: uppercase; }
+.admin-table tbody tr:last-child > * { border-bottom: 0; }
+.admin-table td strong { color: var(--orbit-heading); font-size: 13px; }
+.admin-tech-list { display: flex; flex-wrap: wrap; gap: 5px; }
+.admin-tech-list span { padding: 4px 8px; border-radius: 100px; background: #edf5f9; color: #526579; font-size: 8px; font-weight: 800; }
+.admin-row-actions { display: flex; justify-content: flex-end; gap: 7px; }
+.admin-row-actions form { margin: 0; }
+.admin-action-button { min-height: 34px; display: inline-flex; align-items: center; justify-content: center; padding: 0 11px; border: 1px solid var(--orbit-border); border-radius: 8px; background: white; color: #64748b; cursor: pointer; font-size: 10px; font-weight: 850; }
+.admin-action-button:hover { border-color: var(--orbit-accent); color: var(--orbit-accent-dark); }
+.admin-action-button.danger:hover { border-color: #fca5a5; background: #fff1f2; color: #be123c; }
+.admin-empty { padding: 50px 20px; color: #94a3b8; text-align: center; font-size: 12px; }
+
+.admin-auth-shell { width: 100%; min-height: 100vh; display: grid; grid-template-columns: minmax(420px, .9fr) minmax(500px, 1.1fr); background: white; }
+.admin-login-card { width: min(100% - 60px, 470px); margin: auto; padding-block: 60px; }
+.admin-auth-brand { margin-bottom: 64px; }
+.admin-login-card h1 { margin: 14px 0 14px; color: var(--orbit-heading); font-size: clamp(3rem, 5vw, 4.7rem); line-height: .98; letter-spacing: -.075em; }
+.admin-login-card > p { margin: 0 0 32px; color: #718096; font-size: 13px; line-height: 1.75; }
+.admin-login-form { display: grid; gap: 18px; }
+.admin-field { display: grid; gap: 8px; }
+.admin-field label { color: var(--orbit-heading); font-size: 11px; font-weight: 850; }
+.admin-field .form-control { min-height: 51px; border-color: var(--orbit-border); border-radius: 11px; color: var(--orbit-heading); font-size: 13px; }
+.admin-field .form-control:focus { border-color: var(--orbit-accent); box-shadow: 0 0 0 4px rgba(14,165,233,.11); }
+.admin-login-submit { width: 100%; margin-top: 7px; }
+.admin-back-link { display: inline-flex; margin-top: 26px; color: #64748b; font-size: 11px; font-weight: 800; }
+.admin-back-link:hover { color: var(--orbit-accent-dark); }
+.admin-alert { margin-bottom: 20px; padding: 12px 14px; border: 1px solid; border-radius: 10px; font-size: 11px; font-weight: 750; }
+.admin-alert-error { border-color: #fecdd3; background: #fff1f2; color: #be123c; }
+.admin-alert-success { border-color: #a7f3d0; background: #ecfdf5; color: #047857; }
+.admin-auth-art { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 80px; background: radial-gradient(circle at 15% 10%, rgba(255,255,255,.18), transparent 26%), linear-gradient(140deg, #0ea5e9, #101c38); color: white; }
+.admin-auth-art::before,
+.admin-auth-art::after { content: ""; position: absolute; width: 320px; height: 320px; border: 1px solid rgba(255,255,255,.16); border-radius: 50%; }
+.admin-auth-art::before { right: -120px; top: -100px; }
+.admin-auth-art::after { left: -160px; bottom: -130px; width: 420px; height: 420px; }
+.admin-auth-art span { position: relative; z-index: 1; color: #bae6fd; font-size: 12px; font-weight: 900; letter-spacing: .2em; }
+.admin-auth-art strong { position: relative; z-index: 1; margin-top: 24px; font-size: clamp(4rem, 8vw, 7.7rem); line-height: .88; letter-spacing: -.075em; }
+.admin-auth-art p { position: relative; z-index: 1; margin: 48px 0 0; color: #bae6fd; font-size: 11px; font-weight: 750; letter-spacing: .08em; }
+
+.admin-form-shell { max-width: 900px; }
+.admin-student-form { padding: 40px; display: grid; gap: 22px; border: 1px solid var(--orbit-border); border-radius: 20px; background: white; box-shadow: var(--shadow-sm); }
+.admin-form-actions { display: flex; align-items: center; justify-content: flex-end; gap: 18px; padding-top: 8px; }
+.admin-form-actions .admin-back-link { margin: 0; }
+.admin-form-actions .button { min-width: 145px; }
+
+@media (max-width: 991px) {
+  .admin-auth-shell { grid-template-columns: 1fr; }
+  .admin-auth-art { display: none; }
+  .admin-dashboard-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+  .admin-shell { padding-block: 42px 70px; }
+  .admin-topbar { height: 68px; }
+  .admin-topbar .brand > span:last-child { display: none; }
+  .admin-page-heading { display: block; }
+  .admin-page-heading > p { margin-top: 20px; }
+  .admin-list-heading .button { margin-top: 24px; }
+  .admin-feature-card { min-height: 340px; padding: 28px 24px; }
+  .admin-table-header { padding-inline: 20px; }
+  .admin-login-card { width: min(100% - 34px, 470px); }
+  .admin-auth-brand { margin-bottom: 46px; }
+  .admin-student-form { padding: 28px 20px; }
+}
