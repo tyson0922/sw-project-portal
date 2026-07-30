@@ -1,230 +1,169 @@
-<!doctype html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      data-render-mode="static"
-      th:attr="data-render-mode='server'">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="_csrf" content="" th:content="${_csrf.token}">
-    <meta name="_csrf_header" content="X-CSRF-TOKEN" th:content="${_csrf.headerName}">
-    <title th:text="${projectId != null} ? '프로젝트 수정 | SW 작품전' : '프로젝트 등록 | SW 작품전'">프로젝트 등록 | SW 작품전</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/common.css">
-    <link rel="stylesheet" href="/css/admin.css">
-    <link rel="stylesheet" href="/css/project-form.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
-    <script src="/js/common.js" defer></script>
-    <script src="/js/project-form.js" defer></script>
-  </head>
-  <body class="admin-page"
-        data-page="project-form"
-        data-form-mode="create"
-        th:attr="data-form-mode=${projectId != null} ? 'edit' : 'create'"
-        id="top">
-    <header class="admin-topbar">
-      <div class="container admin-topbar-inner">
-        <a class="brand" href="/admin/dashboard"><span class="brand-mark">SW</span><span>작품전 관리자</span></a>
-        <a class="admin-dashboard-link" href="/admin/dashboard">대시보드로 돌아가기</a>
-      </div>
-    </header>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="_csrf" th:content="${_csrf.token}">
+  <meta name="_csrf_header" th:content="${_csrf.headerName}">
+  <title>프로젝트 등록</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
 
-    <main class="admin-project-main">
-      <div class="container project-form-shell">
-        <div class="form-page-heading">
-          <div>
-            <span class="section-kicker" data-form-kicker th:text="${projectId != null} ? 'EDIT PROJECT' : 'REGISTER PROJECT'">REGISTER PROJECT</span>
-            <h1 data-form-title th:text="${projectId != null} ? '프로젝트 수정' : '프로젝트 등록'">프로젝트 등록</h1>
-          </div>
-          <p data-form-description th:text="${projectId != null} ? '등록된 작품의 정보와 관계 데이터를 수정합니다.' : 'MariaDB에 저장할 작품 정보와 학생·기술 관계를 등록합니다.'">MariaDB에 저장할 작품 정보와 학생·기술 관계를 등록합니다.</p>
+<div class="container py-4">
+  <h3 th:text="${projectId != null} ? '프로젝트 수정' : '새 프로젝트 등록'">프로젝트 등록</h3>
+
+  <form th:action="@{${formAction}}" method="post">
+
+    <div class="mb-3">
+      <label class="form-label">제목</label>
+      <input type="text" name="title" class="form-control" th:value="${project != null} ? ${project.title} : ''" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">설명</label>
+      <textarea name="description" class="form-control" rows="3" required th:text="${project != null} ? ${project.description} : ''"></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">YouTube URL</label>
+      <input type="text" name="youtubeUrl" class="form-control" th:value="${project != null} ? ${project.youtubeEmbedUrl} : ''" required>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col">
+        <label class="form-label">GitHub URL</label>
+        <input type="text" name="githubUrl" class="form-control" th:value="${project != null} ? ${project.githubUrl} : ''">
+      </div>
+      <div class="col">
+        <label class="form-label">개발일지 URL</label>
+        <input type="text" name="devlogUrl" class="form-control" th:value="${project != null} ? ${project.devlogUrl} : ''">
+      </div>
+      <div class="col">
+        <label class="form-label">Live Demo URL</label>
+        <input type="text" name="liveUrl" class="form-control" th:value="${project != null} ? ${project.liveUrl} : ''">
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">연도</label>
+      <input type="number" name="year" class="form-control" th:value="${project != null} ? ${project.year} : ''" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">참여 학생</label>
+      <div class="form-check" th:each="student : ${allStudents}">
+        <input class="form-check-input" type="checkbox" name="studentIds" th:value="${student.id}"
+               th:id="'student-' + ${student.id}"
+               th:checked="${project != null and #lists.contains(project.studentIds, student.id)}">
+        <label class="form-check-label" th:for="'student-' + ${student.id}" th:text="${student.name}"></label>
+      </div>
+    </div>
+
+    <!-- Technology autocomplete widget goes here (from the previous message) -->
+    <div class="mb-3">
+      <label class="form-label">기술 스택</label>
+      <input type="text" id="techSearchInput" class="form-control" placeholder="기술 이름 입력 (예: gpt)" autocomplete="off">
+      <div id="techSuggestions" class="list-group position-absolute" style="z-index:10;"></div>
+      <div id="techChips" class="mt-2"></div>
+      <div class="mt-2 d-none" id="newTechRow">
+        <div class="input-group">
+          <input type="text" id="newTechName" class="form-control" placeholder="새 기술 이름">
+          <select id="newTechCategory" class="form-select">
+            <option value="FRAMEWORK">FRAMEWORK</option>
+            <option value="LANGUAGE">LANGUAGE</option>
+            <option value="DATABASE">DATABASE</option>
+            <option value="CLOUD">CLOUD</option>
+            <option value="WEB_SERVER">WEB_SERVER</option>
+            <option value="PROTOCOL">PROTOCOL</option>
+            <option value="AUTH">AUTH</option>
+            <option value="AI">AI</option>
+            <option value="EXTERNAL_API">EXTERNAL_API</option>
+            <option value="ETC">ETC</option>
+          </select>
+          <button type="button" class="btn btn-dark" onclick="createNewTech()">추가</button>
         </div>
-
-        <form class="project-form"
-              data-project-form
-              action="/admin/projects"
-              th:action="@{${formAction}}"
-              method="post"
-              novalidate>
-          <section class="form-card">
-            <div class="form-card-heading">
-              <div><span class="section-kicker">BASIC INFORMATION</span><h2>기본 정보</h2></div>
-              <p>목록에 표시될 정보들을 입력하세요.</p>
-            </div>
-            <div class="form-grid">
-              <div class="form-field">
-                <label for="projectTitle">프로젝트 제목</label>
-                <input class="form-control"
-                       id="projectTitle"
-                       name="title"
-                       required
-                       maxlength="200"
-                       placeholder="프로젝트 제목을 입력하세요"
-                       th:value="${project != null} ? ${project.title} : ''">
-              </div>
-              <div class="form-field">
-                <label for="projectYear">프로젝트 개발 연도</label>
-                <input class="form-control"
-                       id="projectYear"
-                       name="year"
-                       type="number"
-                       min="2000"
-                       max="2100"
-                       required
-                       th:value="${project != null} ? ${project.year} : ''">
-              </div>
-              <div class="form-field form-field-wide">
-                <label for="projectDescription">프로젝트 설명</label>
-                <textarea class="form-control"
-                          id="projectDescription"
-                          name="description"
-                          rows="5"
-                          required
-                          placeholder="프로젝트의 목적과 주요 기능을 설명하세요."
-                          th:text="${project != null} ? ${project.description} : ''"></textarea>
-              </div>
-            </div>
-          </section>
-
-          <section class="form-card">
-            <div class="form-card-heading">
-              <div><span class="section-kicker">PROJECT LINKS</span><h2>프로젝트 링크</h2></div>
-              <p>YouTube URL은 필수이며 다른 링크는 비워 둘 수 있습니다.</p>
-            </div>
-            <div class="form-grid">
-              <div class="form-field form-field-wide">
-                <label for="youtubeUrl">YouTube URL</label>
-                <input class="form-control"
-                       id="youtubeUrl"
-                       name="youtubeUrl"
-                       type="url"
-                       maxlength="500"
-                       required
-                       placeholder="https://www.youtube.com/watch?v=..."
-                       th:value="${project != null} ? ${project.youtubeEmbedUrl} : ''">
-                <small>목록 썸네일, 영상 모달과 상세 영상 플레이어에 사용됩니다.</small>
-              </div>
-              <div class="form-field">
-                <label for="githubUrl">GitHub URL</label>
-                <input class="form-control"
-                       id="githubUrl"
-                       name="githubUrl"
-                       type="url"
-                       maxlength="500"
-                       placeholder="https://github.com/..."
-                       th:value="${project != null} ? ${project.githubUrl} : ''">
-              </div>
-              <div class="form-field">
-                <label for="liveUrl">서비스 방문용 URL</label>
-                <input class="form-control"
-                       id="liveUrl"
-                       name="liveUrl"
-                       type="url"
-                       maxlength="500"
-                       placeholder="https://..."
-                       th:value="${project != null} ? ${project.liveUrl} : ''">
-              </div>
-              <div class="form-field form-field-wide">
-                <label for="devlogUrl">개발 기록 URL</label>
-                <input class="form-control"
-                       id="devlogUrl"
-                       name="devlogUrl"
-                       type="url"
-                       maxlength="500"
-                       placeholder="https://..."
-                       th:value="${project != null} ? ${project.devlogUrl} : ''">
-              </div>
-            </div>
-          </section>
-
-          <section class="form-card">
-            <div class="form-card-heading">
-              <div><span class="section-kicker">PROJECT MEMBERS</span><h2>참여 학생</h2></div>
-              <p>학생 관리에 등록된 학생을 프로젝트와 연결합니다.</p>
-            </div>
-            <div class="student-option-grid" data-student-options>
-              <label class="student-option"
-                     data-server-only
-                     th:each="student : ${allStudents}">
-                <input type="checkbox"
-                       name="studentIds"
-                       th:value="${student.id}"
-                       th:checked="${project != null and #lists.contains(project.studentIds, student.id)}">
-                <span class="student-check" aria-hidden="true">✓</span>
-                <span th:text="${student.name}"></span>
-              </label>
-            </div>
-            <p class="relation-error" data-student-error role="alert" hidden>참여 학생을 한 명 이상 선택해 주세요.</p>
-          </section>
-
-          <section class="form-card">
-            <div class="form-card-heading">
-              <div><span class="section-kicker">TECH STACK</span><h2>기술 스택</h2></div>
-              <p>기술명을 입력하고 Enter를 누르면 기존 기술을 연결하거나 새 기술을 등록합니다.</p>
-            </div>
-            <div class="tech-input-table">
-              <div class="stack-input-row" data-stack-category="FRAMEWORK">
-                <div class="stack-input-label">프레임워크</div>
-                <div class="tag-editor"><div class="tag-list" data-tag-list></div><input class="tag-entry" type="text" data-tag-entry placeholder="기술 입력 후 Enter" autocomplete="off"><div class="tech-suggestions" data-tech-suggestions></div></div>
-              </div>
-              <div class="stack-input-row" data-stack-category="LANGUAGE">
-                <div class="stack-input-label">사용 언어</div>
-                <div class="tag-editor"><div class="tag-list" data-tag-list></div><input class="tag-entry" type="text" data-tag-entry placeholder="기술 입력 후 Enter" autocomplete="off"><div class="tech-suggestions" data-tech-suggestions></div></div>
-              </div>
-              <div class="stack-input-row" data-stack-category="DATABASE">
-                <div class="stack-input-label">데이터베이스</div>
-                <div class="tag-editor"><div class="tag-list" data-tag-list></div><input class="tag-entry" type="text" data-tag-entry placeholder="기술 입력 후 Enter" autocomplete="off"><div class="tech-suggestions" data-tech-suggestions></div></div>
-              </div>
-              <div class="stack-input-row" data-stack-category="CLOUD">
-                <div class="stack-input-label">클라우드</div>
-                <div class="tag-editor"><div class="tag-list" data-tag-list></div><input class="tag-entry" type="text" data-tag-entry placeholder="기술 입력 후 Enter" autocomplete="off"><div class="tech-suggestions" data-tech-suggestions></div></div>
-              </div>
-              <div class="stack-input-row" data-stack-category="WEB_SERVER">
-                <div class="stack-input-label">웹 서버</div>
-                <div class="tag-editor"><div class="tag-list" data-tag-list></div><input class="tag-entry" type="text" data-tag-entry placeholder="기술 입력 후 Enter" autocomplete="off"><div class="tech-suggestions" data-tech-suggestions></div></div>
-              </div>
-              <div class="stack-input-row" data-stack-category="PROTOCOL">
-                <div class="stack-input-label">통신 프로토콜</div>
-                <div class="tag-editor"><div class="tag-list" data-tag-list></div><input class="tag-entry" type="text" data-tag-entry placeholder="기술 입력 후 Enter" autocomplete="off"><div class="tech-suggestions" data-tech-suggestions></div></div>
-              </div>
-              <div class="stack-input-row" data-stack-category="AUTH">
-                <div class="stack-input-label">인증 및 보안</div>
-                <div class="tag-editor"><div class="tag-list" data-tag-list></div><input class="tag-entry" type="text" data-tag-entry placeholder="기술 입력 후 Enter" autocomplete="off"><div class="tech-suggestions" data-tech-suggestions></div></div>
-              </div>
-              <div class="stack-input-row" data-stack-category="AI">
-                <div class="stack-input-label">AI</div>
-                <div class="tag-editor"><div class="tag-list" data-tag-list></div><input class="tag-entry" type="text" data-tag-entry placeholder="기술 입력 후 Enter" autocomplete="off"><div class="tech-suggestions" data-tech-suggestions></div></div>
-              </div>
-              <div class="stack-input-row" data-stack-category="EXTERNAL_API">
-                <div class="stack-input-label">API 활용</div>
-                <div class="tag-editor"><div class="tag-list" data-tag-list></div><input class="tag-entry" type="text" data-tag-entry placeholder="기술 입력 후 Enter" autocomplete="off"><div class="tech-suggestions" data-tech-suggestions></div></div>
-              </div>
-              <div class="stack-input-row" data-stack-category="ETC">
-                <div class="stack-input-label">기타 기술</div>
-                <div class="tag-editor"><div class="tag-list" data-tag-list></div><input class="tag-entry" type="text" data-tag-entry placeholder="기술 입력 후 Enter" autocomplete="off"><div class="tech-suggestions" data-tech-suggestions></div></div>
-              </div>
-            </div>
-            <p class="relation-error" data-technology-error role="alert" hidden>기술을 한 개 이상 선택해 주세요.</p>
-          </section>
-
-          <div class="form-actions">
-            <span class="form-status" data-form-status role="status"></span>
-            <a class="form-cancel" href="/admin/projects">취소</a>
-            <button class="button button-primary form-submit"
-                    type="submit"
-                    data-submit-label
-                    th:text="${projectId != null} ? '수정 완료' : '프로젝트 등록'">프로젝트 등록</button>
-          </div>
-        </form>
       </div>
-    </main>
-    <script th:inline="javascript">
-      window.PROJECT_FORM_CONTEXT = { technologies: [], technologiesByCategory: {} };
-      /*[# th:if="${project != null}"]*/
-      window.PROJECT_FORM_CONTEXT = {
-        technologies: /*[[${project.technologies}]]*/ [],
-        technologiesByCategory: /*[[${project.technologiesByCategory}]]*/ {}
-      };
-      /*[/]*/
-    </script>
-  </body>
+    </div>
+
+    <button type="submit" class="btn btn-dark">저장</button>
+  </form>
+</div>
+
+<script th:inline="javascript">
+  const selectedTech = new Map();
+  /*[# th:if="${project != null}"]*/
+  const existing = /*[[${project.technologies}]]*/ [];
+  existing.forEach(t => selectedTech.set(t.id, t.name));
+  /*[/]*/
+  renderChips();
+
+  document.getElementById('techSearchInput').addEventListener('input', async function () {
+    const q = this.value.trim();
+    const box = document.getElementById('techSuggestions');
+    const newRow = document.getElementById('newTechRow');
+    if (q.length < 1) { box.innerHTML = ''; newRow.classList.add('d-none'); return; }
+
+    const res = await fetch(`/admin/api/technologies/search?q=${encodeURIComponent(q)}`);
+    const results = await res.json();
+
+    box.innerHTML = results.map(t =>
+            `<button type="button" class="list-group-item list-group-item-action" onclick="pickTech(${t.id}, '${t.name}')">${t.name}</button>`
+    ).join('');
+
+    newRow.classList.toggle('d-none', results.some(t => t.name.toLowerCase() === q.toLowerCase()));
+    document.getElementById('newTechName').value = q;
+  });
+
+  function pickTech(id, name) {
+    selectedTech.set(id, name);
+    renderChips();
+    document.getElementById('techSearchInput').value = '';
+    document.getElementById('techSuggestions').innerHTML = '';
+    document.getElementById('newTechRow').classList.add('d-none');
+  }
+
+  async function createNewTech() {
+    const name = document.getElementById('newTechName').value.trim();
+    const category = document.getElementById('newTechCategory').value;
+    if (!name) return;
+
+    const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+    const res = await fetch('/admin/api/technologies', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        [csrfHeader]: csrfToken
+      },
+      body: JSON.stringify({ name, category })
+    });
+
+    if (!res.ok) {
+      console.error('Failed to create technology:', res.status);
+      return;
+    }
+
+    const created = await res.json();
+    pickTech(created.id, created.name);
+  }
+
+  function removeTech(id) {
+    selectedTech.delete(id);
+    renderChips();
+  }
+
+  function renderChips() {
+    const container = document.getElementById('techChips');
+    container.innerHTML = Array.from(selectedTech.entries()).map(([id, name]) => `
+        <span class="badge bg-secondary me-1">
+            ${name}
+            <input type="hidden" name="technologyIds" value="${id}">
+            <a href="#" onclick="removeTech(${id}); return false;" class="text-white ms-1">&times;</a>
+        </span>
+    `).join('');
+  }
+</script>
+
+</body>
 </html>

@@ -1,7 +1,6 @@
 package kopo.swprojectportal.controller;
 
 import kopo.swprojectportal.service.ProjectService;
-import kopo.swprojectportal.service.StudentService;
 import kopo.swprojectportal.service.TechnologyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +17,6 @@ import java.util.List;
 public class HomeController {
 
     private final ProjectService projectService;
-    private final StudentService studentService;
     private final TechnologyService technologyService;
 
     @GetMapping("/")
@@ -32,8 +30,6 @@ public class HomeController {
     ) {
         Pageable pageable = PageRequest.of(page, 9);
         model.addAttribute("projectPage", projectService.getProjects(year, studentName, usesAi, technologyIds, pageable));
-        model.addAttribute("registeredProjects", projectService.getAllForAdmin());
-        model.addAttribute("registeredStudents", studentService.getAll());
         model.addAttribute("technologiesByCategory", technologyService.getAllGroupedByCategory());
         model.addAttribute("selectedYear", year);
         model.addAttribute("selectedStudentName", studentName);
