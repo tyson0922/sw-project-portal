@@ -88,7 +88,6 @@
                     <div class="artwork video-thumbnail-artwork">
                       <img th:src="${project.thumbnailUrl}"
                            th:alt="${project.title + ' 소개 영상 썸네일'}">
-                      <span class="thumbnail-play" aria-hidden="true">▶</span>
                     </div>
                   </div>
                 </div>
@@ -151,7 +150,6 @@
                     <img th:src="${project.thumbnailUrl}"
                          th:alt="${project.title + ' 소개 영상 썸네일'}"
                          loading="lazy">
-                    <span class="thumbnail-play" aria-hidden="true">▶</span>
                   </div>
                   <span class="category-badge" th:text="${project.usesAi} ? 'AI · 웹' : '웹'"></span>
                   <div class="hover-overlay">

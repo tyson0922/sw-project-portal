@@ -38,7 +38,7 @@ spring:
 #    suffix: .html
 
 server:
-  port: 11000
+  port: 8080
 
 app:
   admin:
