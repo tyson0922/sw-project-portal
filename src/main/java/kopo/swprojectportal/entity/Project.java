@@ -23,7 +23,7 @@ public class Project {
     private String title;
 
     @Lob // maps to a TEXT/CLOB column - descriptions can run longer than a normal VARCHAR
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "youtube_url", nullable = false, length = 500)
